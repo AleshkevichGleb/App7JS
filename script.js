@@ -36,7 +36,6 @@ let Calculator = function() {
                 break;
 
             default: console.log('error')
-            
         }
     }
 }
@@ -47,24 +46,16 @@ calculator.getData();
 calculator.calc();
 
 
-/*Попробовал связать с html, если все ужасно, то перепишу вывод информации 
-на обычные функции (alert, prompt)*/ 
 
 let Bulb = function(power, cost) {
     this.power = power;
     this.cost = cost;
-    this.condition = confirm('Включить лампочку?');
 
     this.chekCondition = function(){ 
-
         if(/^\d*$/g.test(this.power) === false || /^\d*$/g.test(this.cost) === false){
             alert("Вы неверно указали данные");
             return;
         } 
-
-
-        if(this.condition) alert('Лампочка запущена');
-        else return;
         
         this.p = document.createElement('p');
         this.p.innerHTML = 'Мощность лампочки ' + this.power;
@@ -74,29 +65,200 @@ let Bulb = function(power, cost) {
         this.p2.innerHTML = 'Стоимость электроэнергии ' + this.cost;
         document.body.prepend(this.p2);
 
-        bulb.countF();
-
+        this.btnOn = document.querySelector('.btnOn');
+        this.btnOn.addEventListener('click', () => {
+            bulb.countF();
+        })
     }
 
     this.countF = function() {
-        
+        this.btnOn.disabled = true;
         this.i = 0;
+
+        this.time = document.querySelector('.time');
+        this.time.style.color = 'blue';
+
+        this.resultCost = document.querySelector('.reusltCost');
+        this.resultCost.style.color = 'red';
+
         this.timer = setInterval(() => {
             this.i++;
-            document.querySelector('.input').value = this.i + ' сек.';
+            this.time.innerHTML = this.i + ' сек.';
+
             this.price = (this.power * this.cost)/1555 *this.i; // рандомная формула
-            document.querySelector('.reusltCost').value = (this.price).toFixed(3)+ " коп."
-            bulb.offBulb();
+
+            this.resultCost.innerHTML = this.price.toFixed(3) + ' коп.';
         }, 1000);
     }
 
-    this.offBulb = function() { // не останавливает
-        this.offCount = document.querySelector(".btnOff");
-        this.offCount.onclick = function() {
-            clearInterval(timer)
-        }
+    this.offBulb = function() {
+        const offCount = document.querySelector(".btnOff");
+        offCount.addEventListener('click', () => {
+            this.btnOn.disabled = false;
+            clearInterval(this.timer);
+        })
     }
 }
 
 let bulb = new Bulb(prompt("Введите мощность лампочки"), prompt("Введите стоимость электроэнергии"));
 bulb.chekCondition();
+bulb.offBulb();
+
+
+
+
+let Car = function() {
+
+    this.brend = document.querySelector('.car__brend');
+    this.num = document.querySelector('.car__num');
+    this.start = document.querySelector('.car__btnStart');
+
+    let timer = 0;
+    this.speedCount = 0;
+    this.distanceCount = 0;
+
+    this.checkData = function () {
+        this.start.addEventListener('click', () => {
+            if(/^\w{3,}$/g.test(this.brend.value) === false || /^[\w\d-]{5,}$/g.test(this.num.value) === false) {
+                alert('Введите все данные корректно')
+            }else{
+                alert('Двигатель запущен')
+
+                this.btnForward = document.createElement('button');
+                this.btnForward.innerHTML = "Вперед";
+                document.body.append(this.btnForward);
+
+                this.stop = document.createElement('button');
+                this.stop.innerHTML = "Стоп";
+                document.body.append(this.stop);
+
+                this.btnBack = document.createElement('button');
+                this.btnBack.innerHTML = "Назад";
+                document.body.append(this.btnBack);
+                
+                this.speed = document.createElement('p');
+                this.speed.innerHTML = "Текущая скорость: ";
+                document.body.append(this.speed);
+
+                this.distance = document.createElement('p');
+                this.distance.innerHTML = "Вы проехали: ";
+                document.body.append(this.distance);
+
+                setInterval(() => {
+                    this.distanceCount += this.speedCount/16600;
+                    this.distance.innerHTML = 'Вы проехали: '+ this.distanceCount.toFixed(3) + 'км';
+                    if(this.speedCount !== 0) this.btnForward.disabled = true;
+                    else this.btnForward.disabled = false;
+
+                    if(this.speedCount !== 0) this.btnBack.disabled = true;
+                    else this.btnBack.disabled = false;
+
+                }, 100);
+
+                this.btnForward.addEventListener('click', () => {
+                    this.goForward();
+                })
+
+                this.stop.addEventListener('click', () => {
+                    this.stopCar();
+                })
+
+                this.btnBack.addEventListener('click', () => {
+                    this.goBack();
+                })
+            }
+        })
+    }   
+
+    this.goForward = function() {
+         timer = setInterval(() => {
+            this.speedCount++;
+            this.speed.innerHTML = 'Текущая скорость: ' + this.speedCount + 'км/ч';
+
+            if(this.speedCount === 80){
+            alert('Стоит ограничитель');
+            clearInterval(timer);
+            } 
+
+        }, 100);
+    }
+
+    this.goBack = function() {
+        timer = setInterval(() => {
+            this.speedCount++;
+            this.speed.innerHTML = 'Текущая скорость: ' + this.speedCount + 'км/ч';
+
+            if(this.speedCount === 25){
+                alert('Максимальная скорость');
+                clearInterval(timer)
+            } 
+        }, 200);
+    }
+
+    this.stopCar =  function() {
+        clearInterval(timer);
+
+        timer = setInterval(() => {
+            this.speedCount--;
+            this.speed.innerHTML = 'Текущая скорость: ' + this.speedCount + 'км/ч';
+            if(this.speedCount === 0){
+                alert('Остановились');
+                clearInterval(timer);
+            } 
+        }, 20);
+    }
+    
+}
+
+let car = new Car();
+car.checkData();
+ 
+
+
+let Teapot = function(power, v, amountOfWater, condition) {
+    this.power = power;
+    this.v = v;
+    this.amountOfWater = amountOfWater;
+    this.condition = condition;
+
+    this.checkData = function() {
+        if(this.amountOfWater > this.v){
+            console.log("Неверные данные");
+            return;
+        }
+
+        if(!this.condition){
+            console.log("Чайник не запущен");
+            console.log('\n');
+            return;
+        }else{
+            this.calc();
+        }
+    }
+
+    this.calc = function() {
+        this.time = (0.00117 * this.amountOfWater * 80 / this.power).toFixed(2);
+        this.show();
+    }
+
+    this.show = function() {
+        console.log(`Мощность ${this.power}кВт\nОбъем ${this.v}мл\nКоличество воды в чайнике ${this.amountOfWater}мл\nВода закипит за ${this.time} мин.`);
+        console.log('\n');
+    }
+
+}
+
+const teapot = new Teapot(10, 1000, 900, true);
+teapot.checkData(); 
+
+const teapot2 = new Teapot(12, 1500, 500, true);
+teapot2.checkData();
+
+const teapot3 = new Teapot(7, 800, 500, false);
+teapot3.checkData();
+
+const teapot4 = new Teapot(5, 600, 400, true);
+teapot4.checkData();
+
+
+

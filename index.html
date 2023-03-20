@@ -8,15 +8,23 @@
     <title>Document</title>
 </head>
 <body>
+    <button class = 'btnOn'>Включить</button>
     <div>
         <span class = "text">Лампочка горит: </span>
-        <input type="text" value="0" class = 'input' >
-        <button class = 'btnOff'>Выключить</button>
-        <span>не работает</span>
+        <span class = 'time'></span>
     </div>
+
     <div>
         <span>Вы потратили:</span>
-        <input type="text" class = 'reusltCost' value="0">
+        <span class = 'reusltCost'></span>
+    </div>
+    <button class = 'btnOff'>Выключить</button>
+
+
+    <div class = 'car'>
+        <span>Введите марку авто</span> <input type="text"  class = 'car__brend'>
+        <span>Введите номер авто</span> <input type="text" class = 'car__num'>
+        <button class = 'car__btnStart'>Запустить двигатель</button>
     </div>
 
     <script src="script.js"></script>
