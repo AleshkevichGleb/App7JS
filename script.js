@@ -131,6 +131,7 @@ let Car = function() {
                 this.stop = document.createElement('button');
                 this.stop.innerHTML = "Стоп";
                 document.body.append(this.stop);
+                this.stop.disabled = true;
 
                 this.btnBack = document.createElement('button');
                 this.btnBack.innerHTML = "Назад";
@@ -157,14 +158,17 @@ let Car = function() {
 
                 this.btnForward.addEventListener('click', () => {
                     this.goForward();
+                    this.stop.disabled = false;
                 })
 
                 this.stop.addEventListener('click', () => {
                     this.stopCar();
+                    this.stop.disabled = true;
                 })
 
                 this.btnBack.addEventListener('click', () => {
                     this.goBack();
+                    this.stop.disabled = false;
                 })
             }
         })
@@ -179,7 +183,6 @@ let Car = function() {
             alert('Стоит ограничитель');
             clearInterval(timer);
             } 
-
         }, 100);
     }
 
